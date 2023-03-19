@@ -1,4 +1,4 @@
-function abcd(){window.addEventListener("DOMContentLoaded", function(){
+window.addEventListener("DOMContentLoaded", function(){
     function locomotive() {
         gsap.registerPlugin(ScrollTrigger);
       
@@ -619,6 +619,5 @@ function abcd(){window.addEventListener("DOMContentLoaded", function(){
         duration: 8,
       });
       
-  })};
-
-  abcd()
+  });
+  
