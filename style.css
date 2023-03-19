@@ -9,6 +9,10 @@ body {
   height: 100%;
   width: 100%;
 }
+@font-face {
+    font-family: gilroy;
+    src: url(./Radomir_Tinkov_-_Gilroy_Font_Family_20_215_OTF_150/Gilroy\ Gallery.pdf);
+}
 #main {
   position: relative;
   overflow: hidden;
