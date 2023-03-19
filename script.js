@@ -1,5 +1,5 @@
-window.addEventListener("DOMContentLoaded", function(){
-    function locomotive() {
+function complexloder(){
+     function locomotive() {
         gsap.registerPlugin(ScrollTrigger);
       
         const locoScroll = new LocomotiveScroll({
@@ -618,6 +618,13 @@ window.addEventListener("DOMContentLoaded", function(){
         ease: `none`,
         duration: 8,
       });
-      
+}
+
+
+
+
+window.addEventListener("DOMContentLoaded", function(){
+   complexloder();
   });
   
+
