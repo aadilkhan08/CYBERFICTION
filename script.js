@@ -1,33 +1,38 @@
-function locomotive(){
-    gsap.registerPlugin(ScrollTrigger);
+function locomotive() {
+  gsap.registerPlugin(ScrollTrigger);
 
+  const locoScroll = new LocomotiveScroll({
+    el: document.querySelector("#main"),
+    smooth: true,
+    //   multiplier:.2
+  });
+  locoScroll.on("scroll", ScrollTrigger.update);
 
-const locoScroll = new LocomotiveScroll({
-  el: document.querySelector("#main"),
-  smooth: true,
-//   multiplier:.2
-});
-locoScroll.on("scroll", ScrollTrigger.update);
+  ScrollTrigger.scrollerProxy("#main", {
+    scrollTop(value) {
+      return arguments.length
+        ? locoScroll.scrollTo(value, 0, 0)
+        : locoScroll.scroll.instance.scroll.y;
+    },
 
-ScrollTrigger.scrollerProxy("#main", {
-  scrollTop(value) {
-    return arguments.length ? locoScroll.scrollTo(value, 0, 0) : locoScroll.scroll.instance.scroll.y;
-  }, 
+    getBoundingClientRect() {
+      return {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+    },
 
-  getBoundingClientRect() {
-    return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
-  },
-  
-  pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
-});
-ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
-ScrollTrigger.refresh();
-
+    pinType: document.querySelector("#main").style.transform
+      ? "transform"
+      : "fixed",
+  });
+  ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+  ScrollTrigger.refresh();
 }
 
-locomotive()
-
-
+locomotive();
 
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
@@ -36,13 +41,13 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 window.addEventListener("resize", function () {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    render();
-})
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  render();
+});
 
 function files(index) {
-    var data = `
+  var data = `
      ./male0001.png
      ./male0002.png
      ./male0003.png
@@ -344,274 +349,271 @@ function files(index) {
      ./male0299.png
      ./male0300.png
  `;
-    return data.split("\n")[index];
+  return data.split("\n")[index];
 }
 
 const frameCount = 300;
 
 const images = [];
 const imageSeq = {
-    frame: 1
+  frame: 1,
 };
 
 for (let i = 0; i < frameCount; i++) {
-    const img = new Image();
-    img.src = files(i);
-    images.push(img);
+  const img = new Image();
+  img.src = files(i);
+  images.push(img);
 }
 
 gsap.to(imageSeq, {
-    frame: frameCount - 1,
-    snap: "frame",
-    ease: `none`,
-    scrollTrigger: {
-        scrub:.15,
-        trigger:`#page`,
-        start:`top top`,
-        end:`700% top`,
-        scroller:`#main`
-    },
-    onUpdate: render
+  frame: frameCount - 1,
+  snap: "frame",
+  ease: `none`,
+  scrollTrigger: {
+    scrub: 0.15,
+    trigger: `#page`,
+    start: `top top`,
+    end: `700% top`,
+    scroller: `#main`,
+  },
+  onUpdate: render,
 });
 
 images[1].onload = render;
 
 function render() {
-    scaleImage(images[imageSeq.frame], context)
+  scaleImage(images[imageSeq.frame], context);
 }
 
 function scaleImage(img, ctx) {
-    var canvas = ctx.canvas;
-    var hRatio = canvas.width / img.width;
-    var vRatio = canvas.height / img.height;
-    var ratio = Math.max(hRatio, vRatio);
-    var centerShift_x = (canvas.width - img.width * ratio) / 2;
-    var centerShift_y = (canvas.height - img.height * ratio) / 2;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height,
-        centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+  var canvas = ctx.canvas;
+  var hRatio = canvas.width / img.width;
+  var vRatio = canvas.height / img.height;
+  var ratio = Math.max(hRatio, vRatio);
+  var centerShift_x = (canvas.width - img.width * ratio) / 2;
+  var centerShift_y = (canvas.height - img.height * ratio) / 2;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(
+    img,
+    0,
+    0,
+    img.width,
+    img.height,
+    centerShift_x,
+    centerShift_y,
+    img.width * ratio,
+    img.height * ratio
+  );
 }
 ScrollTrigger.create({
-    trigger:"#page",
-    pin:true,
+  trigger: "#page",
+  pin: true,
+  // markers:true,
+  scroller: `#main`,
+  start: `top top`,
+  end: `700% top`,
+});
+
+gsap.to("#loop>h1", {
+  right: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
+gsap.to("#loop>h2", {
+  right: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
+
+gsap.to("#loop", {
+  scrollTrigger: {
+    trigger: `#loop`,
+    start: `top 33%`,
+    end: `bottom top`,
     // markers:true,
-    scroller:`#main`,
-    start:`top top`,
-    end:`700% top`,
-})
+    scrub: 0.15,
+    scroller: `#main`,
+  },
+  top: `-50%`,
+});
+gsap.to("#canvo-io>h4", {
+  scrollTrigger: {
+    trigger: `#canvo-io>h4`,
+    scroller: `#main`,
+    start: `top 56.2%`,
+    end: `bottom top`,
+    // markers:true,
+    scrub: 0.15,
+  },
+  top: `-50%`,
+});
+gsap.to("#scroll-to>h5", {
+  scrollTrigger: {
+    trigger: `#scroll-to>h5`,
+    scroller: `#main`,
+    start: `top 66.1%`,
+    end: `bottom top`,
+    // markers:true,
+    scrub: 0.15,
+  },
+  top: `-50%`,
+});
 
+gsap.to("#first-canvo-io", {
+  scrollTrigger: {
+    trigger: `#first-canvo-io`,
+    // markers:true,
+    start: `-547.5% top`,
+    scroller: `#main`,
+    scrub: 0.15,
+  },
+  top: `30%`,
+});
 
-gsap.to("#loop>h1",{
-    right:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
-gsap.to("#loop>h2",{
-    right:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
+gsap.to("#first-canvo-io-1", {
+  scrollTrigger: {
+    trigger: `#first-canvo-io-1`,
+    scroller: `#main`,
+    // markers:true,
+    start: `-684% top`,
+    scrub: 0.15,
+  },
+  top: `50%`,
+});
 
+gsap.to("#first-canvo-io", {
+  scrollTrigger: {
+    trigger: `#first-canvo-io`,
+    // markers:true,
+    start: `580% top`,
+    scroller: `#main`,
+    scrub: 0.15,
+    end: `680% top`,
+  },
+  opacity: 0,
+});
 
-gsap.to("#loop",{
-    scrollTrigger:{
-        trigger:`#loop`,
-        start:`top 33%`,
-        end:`bottom top`,
-        // markers:true,
-        scrub:.15,
-        scroller:`#main`
-    },
-    top:`-50%`
-})
-gsap.to("#canvo-io>h4",{
-    scrollTrigger:{
-        trigger:`#canvo-io>h4`,
-        scroller:`#main`,
-        start:`top 56.2%`,
-        end:`bottom top`,
-        // markers:true,
-        scrub:.15
-    },
-    top:`-50%`
-})
-gsap.to("#scroll-to>h5",{
-    scrollTrigger:{
-        trigger:`#scroll-to>h5`,
-        scroller:`#main`,
-        start:`top 66.1%`,
-        end:`bottom top`,
-        // markers:true,
-        scrub:.15
-    },
-    top:`-50%`
-})
+gsap.to("#first-canvo-io-1", {
+  scrollTrigger: {
+    trigger: `#first-canvo-io-1`,
+    scroller: `#main`,
+    // markers:true,
+    start: `580% top`,
+    scrub: 0.15,
+    end: `680% top`,
+  },
+  opacity: 0,
+});
 
-gsap.to("#first-canvo-io",{
-    scrollTrigger:{
-        trigger:`#first-canvo-io`,
-        // markers:true,
-        start:`-547.5% top`,
-        scroller:`#main`,
-        scrub:.15
-    },
-    top:`30%`
-})
+gsap.to("#second-canvo-io", {
+  scrollTrigger: {
+    trigger: `#second-canvo-io`,
+    // markers:true,
+    start: `500% top`,
+    scroller: `#main`,
+    scrub: 0.15,
+    end: `700% top`,
+  },
+  top: `30%`,
+});
 
-gsap.to("#first-canvo-io-1",{
-    scrollTrigger:{
-        trigger:`#first-canvo-io-1`,
-        scroller:`#main`,
-        // markers:true,
-        start:`-684% top`,
-        scrub:.15
-    },
-    top:`50%`
-})
+gsap.to("#second-canvo-io-1>h5", {
+  scrollTrigger: {
+    trigger: `#second-canvo-io-1>h5`,
+    scroller: `#main`,
+    // markers:true,
+    start: `1150% top`,
+    scrub: 0.15,
+    end: `1550% top`,
+  },
+  top: `50%`,
+});
 
+gsap.to("#second-canvo-io", {
+  scrollTrigger: {
+    trigger: `#first-canvo-io`,
+    // markers:true,
+    start: `1300% top`,
+    scroller: `#main`,
+    scrub: 0.15,
+    end: `1500% top`,
+  },
+  opacity: 0,
+});
 
-gsap.to("#first-canvo-io",{
-    scrollTrigger:{
-        trigger:`#first-canvo-io`,
-        // markers:true,
-        start:`580% top`,
-        scroller:`#main`,
-        scrub:.15,
-        end:`680% top`
-    },
-    opacity:0,
-})
+gsap.to("#second-canvo-io-1>h5", {
+  scrollTrigger: {
+    trigger: `#second-canvo-io-1>h5`,
+    scroller: `#main`,
+    // markers:true,
+    start: `2200% top`,
+    scrub: 0.15,
+    end: `2700% top`,
+  },
+  opacity: 0,
+});
 
-gsap.to("#first-canvo-io-1",{
-    scrollTrigger:{
-        trigger:`#first-canvo-io-1`,
-        scroller:`#main`,
-        // markers:true,
-        start:`580% top`,
-        scrub:.15,
-        end:`680% top`
-    },
-    opacity:0,
-})
+gsap.to("#third-canvo-io>h5", {
+  scrollTrigger: {
+    trigger: `#third-canvo-io>h5`,
+    // markers:true,
+    start: `2500% top`,
+    scroller: `#main`,
+    scrub: 0.15,
+    end: `3000% top`,
+  },
+  top: `30%`,
+});
 
+gsap.to("#third-canvo-io-1", {
+  scrollTrigger: {
+    trigger: `#third-canvo-io-1`,
+    scroller: `#main`,
+    // markers:true,
+    start: `900% top`,
+    scrub: 0.15,
+    end: `1300% top`,
+  },
+  top: `50%`,
+});
 
-gsap.to("#second-canvo-io",{
-    scrollTrigger:{
-        trigger:`#second-canvo-io`,
-        // markers:true,
-        start:`500% top`,
-        scroller:`#main`,
-        scrub:.15,
-        end:`700% top`
-    },
-    top:`30%`
-})
+gsap.to("#infi>h1", {
+  right: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
+gsap.to("#infi>h2", {
+  right: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
 
-gsap.to("#second-canvo-io-1>h5",{
-    scrollTrigger:{
-        trigger:`#second-canvo-io-1>h5`,
-        scroller:`#main`,
-        // markers:true,
-        start:`1150% top`,
-        scrub:.15,
-        end:`1550% top`
-    },
-    top:`50%`
-})
+gsap.to("#infi1>h1", {
+  left: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
+gsap.to("#infi1>h2", {
+  left: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
 
-
-gsap.to("#second-canvo-io",{
-    scrollTrigger:{
-        trigger:`#first-canvo-io`,
-        // markers:true,
-        start:`1300% top`,
-        scroller:`#main`,
-        scrub:.15,
-        end:`1500% top`
-    },
-    opacity:0,
-})
-
-gsap.to("#second-canvo-io-1>h5",{
-    scrollTrigger:{
-        trigger:`#second-canvo-io-1>h5`,
-        scroller:`#main`,
-        // markers:true,
-        start:`2200% top`,
-        scrub:.15,
-        end:`2700% top`
-    },
-    opacity:0,
-})
-
-
-gsap.to("#third-canvo-io>h5",{
-    scrollTrigger:{
-        trigger:`#third-canvo-io>h5`,
-        // markers:true,
-        start:`2500% top`,
-        scroller:`#main`,
-        scrub:.15,
-        end:`3000% top`
-    },
-    top:`30%`
-})
-
-gsap.to("#third-canvo-io-1",{
-    scrollTrigger:{
-        trigger:`#third-canvo-io-1`,
-        scroller:`#main`,
-        // markers:true,
-        start:`900% top`,
-        scrub:.15,
-        end:`1300% top`
-    },
-    top:`50%`
-})
-
-
-
-
-
-
-gsap.to("#infi>h1",{
-    right:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
-gsap.to("#infi>h2",{
-    right:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
-
-gsap.to("#infi1>h1",{
-    left:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
-gsap.to("#infi1>h2",{
-    left:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
-
-
-gsap.to("#infi2>h1",{
-    right:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
-gsap.to("#infi2>h2",{
-    right:`50%`,
-    repeat:-1,
-    ease: `none`,
-    duration:8,
-})
+gsap.to("#infi2>h1", {
+  right: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
+gsap.to("#infi2>h2", {
+  right: `50%`,
+  repeat: -1,
+  ease: `none`,
+  duration: 8,
+});
